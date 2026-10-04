@@ -1,0 +1,30 @@
+{
+  "$comment": "The Gather Rnd connector's tools that the skills name, by their names at https://mcp.gatherrnd.app/mcp. The monorepo's apps/mcp catalog must keep each of them; scripts/check.mjs keeps this list and the skills in step.",
+  "connector": "https://mcp.gatherrnd.app/mcp",
+  "tools": [
+    "asks_create",
+    "asks_delete",
+    "asks_get",
+    "asks_helping",
+    "asks_mine",
+    "asks_not_yet",
+    "asks_resolve",
+    "asks_take",
+    "asks_unconfirm",
+    "asks_update",
+    "asks_week",
+    "calendar_add_event",
+    "calendar_week",
+    "circle_get",
+    "circles_list",
+    "me_get",
+    "reactions_set",
+    "repeats_create",
+    "repeats_list",
+    "stickies_resolve",
+    "time_blocks_list",
+    "week_close",
+    "week_get",
+    "week_review"
+  ]
+}

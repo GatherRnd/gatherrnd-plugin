@@ -1,0 +1,15 @@
+{
+  "name": "gatherrnd",
+  "description": "Gather Rnd's plugin for AI assistants: plan your circle's week and make asks through your own Gather Rnd account.",
+  "owner": {
+    "name": "Gather Rnd",
+    "url": "https://gatherrnd.app"
+  },
+  "plugins": [
+    {
+      "name": "gatherrnd",
+      "source": "./plugins/gatherrnd",
+      "description": "Plan your circle's week and make asks through your own Gather Rnd account."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "gatherrnd": {
+      "type": "http",
+      "url": "https://mcp.gatherrnd.app/mcp"
+    }
+  }
+}

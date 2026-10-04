@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "gatherrnd",
+  "version": "0.2.0",
+  "description": "Plan your circle's week and make asks from a conversation, through your own Gather Rnd account: read the week and its calendars, spot gaps and clashes, turn what you say into asks, and review and close last week at the Weekly Gathering.",
+  "author": {
+    "name": "Gather Rnd",
+    "url": "https://gatherrnd.app"
+  },
+  "homepage": "https://gatherrnd.app",
+  "repository": "https://github.com/GatherRnd/gatherrnd-plugin",
+  "keywords": ["planning", "week", "asks", "circle", "calendar"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Gather Rnd",
+        "shortDescription": "Plan your circle's week",
+        "category": "Productivity",
+        "websiteURL": "https://gatherrnd.app",
+        "supportURL": "https://support.gatherrnd.app",
+        "privacyPolicyURL": "https://gatherrnd.app/privacy",
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/composer-icon.png",
+        "brandColor": "#2F5A52"
+      }
+    }
+  }
+}
