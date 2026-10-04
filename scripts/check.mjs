@@ -10,8 +10,8 @@
  *
  * Prints each problem and exits 1 if there are any. `--base` is the ref a pull
  * request merges into: a change to the plugin folder must raise its version.
- * `--submission` adds what a directory submission needs on top: a licence,
- * and OpenAI's required listing fields. Nothing here builds or uploads a
+ * `--submission` adds what a directory submission needs on top: OpenAI's
+ * required listing fields. Nothing here builds or uploads a
  * package. Zero dependencies, Node 22. `scripts/check.test.mjs` holds the rules.
  */
 import { execFileSync } from 'node:child_process';
@@ -483,13 +483,22 @@ export function checkPlugin(root, { base, submission = false } = {}) {
     }
   }
 
-  // 10. At submission: what both directories need that day-to-day work does not.
+  // 10. A licence, in both manifests and as a file in the plugin folder, the same
+  //     text as the repository's own (Matt, 2026-10-04: MIT). Claude's directory
+  //     requires one, and an install carries only the plugin folder.
+  if (claude && agent && claude.license === undefined) {
+    problems.push('license: set it in both manifests');
+  }
+  if (!existsSync(at('LICENSE'))) problems.push(`${PLUGIN_DIR}/LICENSE is missing`);
+  else if (
+    existsSync(join(root, 'LICENSE')) &&
+    readFileSync(join(root, 'LICENSE'), 'utf8') !== readFileSync(at('LICENSE'), 'utf8')
+  ) {
+    problems.push(`LICENSE and ${PLUGIN_DIR}/LICENSE must be the same text`);
+  }
+
+  // 11. At submission: what OpenAI's directory needs that day-to-day work does not.
   if (submission) {
-    const licensed =
-      existsSync(at('LICENSE')) || readdirSync(dir).some((f) => /^licen[cs]e/i.test(f));
-    if (!licensed && !claude?.license) {
-      problems.push('a licence: LICENSE in the plugin folder, or license in both manifests');
-    }
     for (const field of ['longDescription', 'developerName', 'termsOfServiceURL', 'logo']) {
       if (ui?.[field] === undefined) problems.push(`interface.${field}: OpenAI requires it`);
     }

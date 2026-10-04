@@ -27,3 +27,7 @@ Either way, a Gather Rnd page asks you to sign in and **Allow**. Disconnect at a
 The plugin is instructions and the address of Gather Rnd's connector. It runs no code of its own and holds no secrets.
 
 Help: [support.gatherrnd.app](https://support.gatherrnd.app) or [info@gatherrnd.app](mailto:info@gatherrnd.app). Security reports: see [SECURITY.md](SECURITY.md).
+
+## Licence
+
+The plugin is [MIT licensed](LICENSE). The licence does not cover the Gather Rnd name or logo.
