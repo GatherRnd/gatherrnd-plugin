@@ -22,7 +22,7 @@ All tools named here come from the Gather Rnd connector. If it isn't connected, 
 
 ## Steps
 
-1. **Know the circle.** If you don't already have them in this conversation: `circles_list` (ask which circle if there are several; skip any with `agentsAllowed: false` and say why), then `me_get` for the member's role and features, and `circle_get` for the members and their membership ids.
+1. **Know the circle.** If you don't already have them in this conversation: `circles_list` (ask which circle if there are several; skip any with `agentsAllowed: false` and say AI assistants aren't available in it), then `me_get` for the member's role and features, and `circle_get` for the members and their membership ids.
 2. **Draft each ask** from what the member said. Fill in only what they said or what follows plainly from it, and ask about the rest in one short question:
    - **What** (`title`, up to 200 characters, in the member's words; `description` only for detail that matters, up to 1,000).
    - **Who can take it.** Anyone in the circle (leave `targetMemberIds` empty), or particular members (their membership ids in `targetMemberIds`). Name one person or a few, never every member: that is Anyone. Only the named members can take a named ask, and only they are notified.

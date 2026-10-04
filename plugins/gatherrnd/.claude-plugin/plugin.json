@@ -11,7 +11,7 @@
   "repository": "https://github.com/GatherRnd/gatherrnd-plugin",
   "keywords": ["planning", "week", "asks", "circle", "calendar"],
   "icon": "./assets/logo.png",
-  "documentationUrl": "https://support.gatherrnd.app",
+  "documentationUrl": "https://mcp.gatherrnd.app",
   "supportUrl": "https://support.gatherrnd.app",
   "privacyPolicyUrl": "https://gatherrnd.app/privacy"
 }

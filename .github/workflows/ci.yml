@@ -21,6 +21,9 @@ jobs:
         with:
           # The rules compare a pull request with the branch it merges into.
           fetch-depth: 0
+          # Nothing after checkout pushes, so the token need not stay on disk
+          # while third-party packages (ajv-cli, claude-code) run.
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22

@@ -22,7 +22,7 @@ All tools named here come from the Gather Rnd connector. If it isn't connected, 
 
 ## Steps
 
-1. **Pick the circle.** Call `circles_list`. If the member is in one circle, use it. If several, ask which one, by name. A circle with `agentsAllowed: false` has turned AI assistants off: tell the member, and don't call tools for it. Use the circle's `familyId` as `circleId` in every later call.
+1. **Pick the circle.** Call `circles_list`. If the member is in one circle, use it. If several, ask which one, by name. A circle with `agentsAllowed: false` is closed to AI assistants, because they aren't open to it yet or the circle turned them off: tell the member you can't help in that circle, without saying who turned anything off, and don't call tools for it. Use the circle's `familyId` as `circleId` in every later call.
 2. **Know the member.** Call `me_get` for the circle: their name, their role (accountable or responsible) and which features are on. Skip any step below whose feature is off, without comment unless the member asks for it. Tools marked "Accountable members only" are refused for a responsible member, so don't offer them.
 3. **Pick the week.** Weeks run Monday to Sunday and are named by their Monday (`weekStart`, `YYYY-MM-DD`). "This week" is the current one; "next week" is the following Monday. If unsure, ask.
 4. **Read the week.** Call `week_get` with that `weekStart`. Call `circle_get` once for the member list and their membership ids. Call `asks_helping` to see asks the member holds and asks addressed to them that they haven't accepted.

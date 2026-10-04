@@ -7,8 +7,8 @@ Gather Rnd is an iPhone app for a small circle of people, such as a family, room
 ## Add it
 
 - **Claude Code:** `/plugin marketplace add GatherRnd/gatherrnd-plugin`, then `/plugin install gatherrnd@gatherrnd`, then `/mcp` to sign in to Gather Rnd.
-- **Claude (web, Desktop, Cowork; paid plans):** Customize › Plugins › Add › Add marketplace, enter `GatherRnd/gatherrnd-plugin`, add **Gather Rnd**, then connect it from the plugin's **Connectors** tab.
-- **Just the connector, any Claude plan:** add a custom connector named Gather Rnd with the URL `https://mcp.gatherrnd.app/mcp`. You get the tools without the plugin's skills.
+- **Claude (web, Desktop, Cowork; paid plans):** Customize › Plugins › Add › Add marketplace › Add from a repository, enter `GatherRnd/gatherrnd-plugin`, add **Gather Rnd**, then connect it from the plugin's **Connectors** tab.
+- **Just the connector, any Claude plan** (Free allows one custom connector): add a custom connector named Gather Rnd with the URL `https://mcp.gatherrnd.app/mcp`. You get the tools without the plugin's skills.
 
 Either way, a Gather Rnd page asks you to sign in and **Allow**. Disconnect at any time in the app, under Settings › AI assistants.
 

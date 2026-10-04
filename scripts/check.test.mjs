@@ -4,7 +4,15 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync }
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { checkPlugin, contrastWithWhite, pngSize, proseWords, PLUGIN_DIR } from './check.mjs';
+import {
+  checkPlugin,
+  contrast,
+  frontMatter,
+  pngSize,
+  proseWords,
+  rises,
+  PLUGIN_DIR,
+} from './check.mjs';
 
 const REPO = join(import.meta.dirname, '..');
 
@@ -78,7 +86,11 @@ test('2. one connector: http for Claude, streamable-http for OpenAI, at the same
 
 test('3. a change to the plugin ships under a higher version', () => {
   const root = copy();
-  const git = (...args) => execFileSync('git', args, { cwd: root, stdio: 'pipe' });
+  const git = (...args) =>
+    execFileSync('git', ['-c', 'commit.gpgsign=false', '-c', 'core.hooksPath=/dev/null', ...args], {
+      cwd: root,
+      stdio: 'pipe',
+    });
   try {
     git('init', '-q', '-b', 'main');
     git('-c', 'user.name=t', '-c', 'user.email=t@t', 'add', '.');
@@ -192,7 +204,7 @@ test('8. OpenAI’s listing limits, and no reviewer credentials in the package',
   const credentials = (i) => i;
   credentials.extra = { review: { test_credentials: { login: 'x' } } };
   assert.match(ui(credentials), /test_credentials goes in OpenAI's dashboard/);
-  assert.ok(contrastWithWhite('#2F5A52') >= 2);
+  assert.ok(contrast('#2F5A52', '#FFFFFF') >= 2);
 });
 
 test('9. every icon is there, a square PNG of 48 to 4,096 px', () => {
@@ -212,6 +224,222 @@ test('9. every icon is there, a square PNG of 48 to 4,096 px', () => {
         icon: 'assets/logo.png',
       })),
     ),
-    /\.claude-plugin\/plugin\.json icon: a \.\/ path inside the plugin/,
+    /\.claude-plugin\/plugin\.json icon: a \.\/ path that stays inside the plugin/,
   );
+});
+
+test('1. listing fields that both manifests carry say the same thing', () => {
+  assert.match(
+    broken((root) =>
+      editJson(root, '.claude-plugin/plugin.json', (manifest) => ({
+        ...manifest,
+        supportUrl: 'https://example.com/help',
+      })),
+    ),
+    /\.claude-plugin\/plugin\.json supportUrl and interface\.supportURL must say the same/,
+  );
+  // The same author, written with its keys in another order, is the same author.
+  assert.deepEqual(
+    broken((root) =>
+      editJson(root, 'plugin.json', (manifest) => ({
+        ...manifest,
+        author: { url: manifest.author.url, name: manifest.author.name },
+      })),
+    ),
+    '',
+  );
+});
+
+test('3. a first move-in, a missing base and prereleases', () => {
+  const root = copy();
+  const git = (...args) =>
+    execFileSync('git', ['-c', 'commit.gpgsign=false', '-c', 'core.hooksPath=/dev/null', ...args], {
+      cwd: root,
+      stdio: 'pipe',
+    });
+  try {
+    git('init', '-q', '-b', 'main');
+    writeFileSync(join(root, 'README.md'), 'repo\n');
+    git('-c', 'user.name=t', '-c', 'user.email=t@t', 'add', 'README.md');
+    git('-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-qm', 'base without the plugin');
+    // The base has no plugin folder yet: nothing to rise above.
+    assert.deepEqual(checkPlugin(root, { base: 'main' }), []);
+    assert.match(
+      checkPlugin(root, { base: 'origin/nope' }).join('\n'),
+      /cannot compare with origin\/nope/,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+  assert.equal(rises('0.2.0', '0.2.1'), true);
+  assert.equal(rises('0.2.0', '0.3.0-beta.1'), true);
+  assert.equal(rises('0.3.0-beta.1', '0.3.0'), true);
+  assert.equal(rises('0.3.0', '0.3.0-beta.1'), false);
+  assert.equal(rises('0.3.0-beta.2', '0.3.0-beta.10'), true);
+  assert.equal(rises('0.2.0', '0.2.0'), false);
+});
+
+test('4. sizes, case, archives, held binaries and hooks', () => {
+  const big = Buffer.alloc(5 * 1024 * 1024);
+  assert.match(
+    broken((root) => writeFileSync(join(root, PLUGIN_DIR, 'assets/huge.png'), big)),
+    /assets\/huge\.png: \d+ bytes; every file stays under 5 MiB/,
+  );
+  assert.deepEqual(
+    broken((root) =>
+      writeFileSync(join(root, PLUGIN_DIR, 'assets/anim.gif'), Buffer.alloc(300 * 1024)),
+    ),
+    '',
+  );
+  assert.match(
+    broken((root) => writeFileSync(join(root, PLUGIN_DIR, 'notes.md'), 'x'.repeat(256 * 1024))),
+    /notes\.md: \d+ bytes; text files stay under 256 KiB/,
+  );
+  assert.match(
+    broken((root) => writeFileSync(join(root, PLUGIN_DIR, 'Bundle.ZIP'), 'x')),
+    /Bundle\.ZIP: no archives inside the plugin/,
+  );
+  assert.match(
+    broken((root) => writeFileSync(join(root, PLUGIN_DIR, 'guide.pdf'), 'x')),
+    /guide\.pdf: only text, images and fonts/,
+  );
+  assert.match(
+    broken((root) => writeFileSync(join(root, PLUGIN_DIR, 'readme.md'), 'x')),
+    /differ only in case/,
+  );
+  assert.match(
+    broken((root) =>
+      editJson(root, '.claude-plugin/plugin.json', (manifest) => ({
+        ...manifest,
+        hooks: './hooks.json',
+      })),
+    ),
+    /no hooks; this plugin runs no code/,
+  );
+});
+
+test('6. front matter read as YAML writes it: quoted, CRLF, and no block descriptions', () => {
+  assert.deepEqual(frontMatter('---\nname: "make-asks"\ndescription: \'One line.\'\n---\n'), {
+    name: 'make-asks',
+    description: 'One line.',
+  });
+  assert.equal(frontMatter('---\r\nname: x\r\ndescription: y\r\n---\r\n').name, 'x');
+  assert.match(
+    broken((root) =>
+      edit(root, 'skills/make-asks/SKILL.md', (text) =>
+        text.replace(/^description: .*$/m, `description: >\n  ${'word '.repeat(400)}`),
+      ),
+    ),
+    /skills\/make-asks: write the description on one line/,
+  );
+  assert.match(
+    broken((root) =>
+      edit(root, 'skills/make-asks/SKILL.md', (text) =>
+        text.replace(/^description: .*$/m, `description: ${'x'.repeat(1025)}`),
+      ),
+    ),
+    /skills\/make-asks: description over 1,024 characters/,
+  );
+});
+
+test('7. tools named as calls or with a server prefix count; other snake_case words do not', () => {
+  assert.match(
+    broken((root) =>
+      edit(
+        root,
+        'skills/make-asks/SKILL.md',
+        (text) => `${text}\nThen \`mcp__gatherrnd__asks_bogus()\`.\n`,
+      ),
+    ),
+    /a skill names `asks_bogus`/,
+  );
+  assert.deepEqual(
+    broken((root) =>
+      edit(
+        root,
+        'skills/make-asks/SKILL.md',
+        (text) => `${text}\nThe outcome can be \`not_yet\`.\n`,
+      ),
+    ),
+    '',
+  );
+});
+
+test('8. dark brand colour, URLs, a single prompt string, and credentials anywhere', () => {
+  const withUi = (change, root) =>
+    editJson(root, 'plugin.json', (manifest) => {
+      const openai = manifest.extensions['com.openai'];
+      return {
+        ...manifest,
+        extensions: { 'com.openai': { ...openai, interface: change(openai.interface) } },
+      };
+    });
+  assert.match(
+    broken((root) => withUi((i) => ({ ...i, brandColorDark: '#333333' }), root)),
+    /interface\.brandColorDark: needs at least 2:1 contrast against #212121/,
+  );
+  assert.match(
+    broken((root) => withUi((i) => ({ ...i, websiteURL: 'http://gatherrnd.app' }), root)),
+    /interface\.websiteURL: an https:\/\/ URL/,
+  );
+  assert.deepEqual(
+    broken((root) =>
+      withUi((i) => ({ ...i, defaultPrompt: "What's on for our circle next week?" }), root),
+    ),
+    '',
+  );
+  assert.match(
+    broken((root) =>
+      editJson(root, 'plugin.json', (manifest) => ({
+        ...manifest,
+        extensions: { ...manifest.extensions, 'com.example': { reviewer_instructions: 'x' } },
+      })),
+    ),
+    /reviewer_instructions goes in OpenAI's dashboard/,
+  );
+});
+
+test('9. an icon path that leaves the plugin is refused before it is read', () => {
+  assert.match(
+    broken((root) =>
+      editJson(root, '.claude-plugin/plugin.json', (manifest) => ({
+        ...manifest,
+        icon: './../outside.png',
+      })),
+    ),
+    /icon: a \.\/ path that stays inside the plugin/,
+  );
+});
+
+test('10. --submission names what a directory submission still needs', () => {
+  const problems = checkPlugin(REPO, { submission: true }).join('\n');
+  for (const need of [
+    'a licence',
+    'interface.longDescription',
+    'interface.developerName',
+    'interface.termsOfServiceURL',
+  ]) {
+    assert.ok(problems.includes(need), need);
+  }
+});
+
+test('the command exits 1 on a problem, 2 on a bare --base, and 0 on the real folder', () => {
+  const script = join(REPO, 'scripts/check.mjs');
+  const run = (cwd, args = []) => {
+    try {
+      execFileSync('node', [script, ...args], { cwd, stdio: 'pipe' });
+      return 0;
+    } catch (error) {
+      return error.status;
+    }
+  };
+  assert.equal(run(REPO), 0);
+  assert.equal(run(REPO, ['--base']), 2);
+  const root = copy();
+  try {
+    edit(root, 'README.md', () => 'too short');
+    assert.equal(run(root), 1);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
