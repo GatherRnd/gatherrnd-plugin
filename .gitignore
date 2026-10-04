@@ -1,0 +1,8 @@
+# System files a directory upload would refuse.
+.DS_Store
+Thumbs.db
+desktop.ini
+__MACOSX/
+
+# Packages built for upload; never committed.
+dist/
