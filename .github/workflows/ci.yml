@@ -1,0 +1,48 @@
+# Every pull request and every push to main: the plugin keeps the rules both
+# directories check (scripts/check.mjs), its Agent Plugins manifests match the
+# vendored schemas, and Claude's own validator passes it strictly. No secrets,
+# and nothing is uploaded anywhere.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check the plugin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The rules compare a pull request with the branch it merges into.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: The rules' own tests
+        run: node --test scripts/check.test.mjs
+      - name: The plugin keeps every rule
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ -n "$BASE_REF" ]; then
+            node scripts/check.mjs --base "origin/$BASE_REF"
+          else
+            node scripts/check.mjs
+          fi
+      - name: plugin.json and mcp.json match the Agent Plugins 1.0.0 schemas
+        run: |
+          npx -y ajv-cli@5.0.0 validate --spec=draft2020 \
+            -s schemas/agent-plugins-1.0.0/plugin.schema.json -d plugins/gatherrnd/plugin.json
+          npx -y ajv-cli@5.0.0 validate --spec=draft2020 \
+            -s schemas/agent-plugins-1.0.0/mcp.schema.json -d plugins/gatherrnd/mcp.json
+      - name: Claude's validator passes the plugin and the marketplace, strictly
+        run: |
+          npm install -g @anthropic-ai/claude-code@2.1.289
+          claude plugin validate --strict plugins/gatherrnd
+          claude plugin validate --strict .
