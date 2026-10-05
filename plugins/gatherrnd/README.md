@@ -16,13 +16,13 @@ Ask Claude in your own words, for example "what's on for our circle next week?",
 
 ## Connect it
 
-You need a Gather Rnd account that belongs to at least one circle. Gather Rnd is invite only, and AI assistants are not open to every circle yet: you can request an invite at [gatherrnd.app](https://gatherrnd.app).
+You need a Gather Rnd account that belongs to at least one circle. Gather Rnd is invite only: you can request an invite at [gatherrnd.app](https://gatherrnd.app).
 
 1. Add the plugin, then connect **Gather Rnd** from the plugin's **Connectors** tab on claude.ai or in Cowork. In Claude Code, run `/mcp` and choose the plugin's **gatherrnd** server to sign in.
 2. A Gather Rnd page opens. Sign in the way you do in the app, read what Claude will get, and choose **Allow**.
 3. To stop it at any time, in the Gather Rnd app tap your face at the top right, then **Settings**, and under **AI assistants** choose **Disconnect**. That stops access at once.
 
-AI assistants are not open to every circle yet; until they reach yours, Claude can't read or change anything there.
+AI assistants start on in every circle, and a circle's accountable members can turn them off. In a circle where they're off, Claude can't read or change anything. Claude can turn them off when an accountable member asks, but it can't turn them back on.
 
 ## What it sends, and privacy
 
