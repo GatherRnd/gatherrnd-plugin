@@ -418,10 +418,14 @@ test('9. an icon path that leaves the plugin is refused before it is read', () =
   );
 });
 
-test('10. a licence in both manifests, and the same LICENSE in the plugin as in the repository', () => {
+test('10. a licence in both manifests, the same LICENSE in the plugin as in the repository, and a NOTICE', () => {
   assert.match(
     broken((root) => rmSync(join(root, PLUGIN_DIR, 'LICENSE'))),
     /plugins\/gatherrnd\/LICENSE is missing/,
+  );
+  assert.match(
+    broken((root) => rmSync(join(root, PLUGIN_DIR, 'NOTICE'))),
+    /plugins\/gatherrnd\/NOTICE is missing/,
   );
   assert.match(
     broken((root) => {

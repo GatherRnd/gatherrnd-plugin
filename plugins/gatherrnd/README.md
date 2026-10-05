@@ -37,3 +37,7 @@ Read the full privacy policy at [gatherrnd.app/privacy](https://gatherrnd.app/pr
 ## Support
 
 Help and contact details are at [support.gatherrnd.app](https://support.gatherrnd.app), or email [info@gatherrnd.app](mailto:info@gatherrnd.app).
+
+## Licence
+
+The plugin's files, apart from its two logo images, are under the MIT licence in its `LICENSE` file: anyone may use, copy, change, host and share them, as long as that licence stays with them. That includes plugin directories and the people who install the plugin, and it includes the files that hold the connector's address. The licence covers this plugin's files only. It does not cover the Gather Rnd app, its API, the connector or the service behind them, which are not open source, nor the Gather Rnd name and logos. It gives no right to use the connector either: that needs a Gather Rnd account. The plugin's `NOTICE` file says this in full.

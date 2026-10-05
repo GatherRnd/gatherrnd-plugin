@@ -484,11 +484,14 @@ export function checkPlugin(root, { base, submission = false } = {}) {
   }
 
   // 10. A licence, in both manifests and as a file in the plugin folder, the same
-  //     text as the repository's own (Matt, 2026-10-04: MIT). Claude's directory
-  //     requires one, and an install carries only the plugin folder.
+  //     text as the repository's own (Matt, 2026-10-04: MIT), and beside it the
+  //     NOTICE that says what the licence does not cover: the app, the connector,
+  //     the service, the name and the logos. Claude's directory requires a
+  //     licence, and an install carries only the plugin folder, so both live there.
   if (claude && agent && claude.license === undefined) {
     problems.push('license: set it in both manifests');
   }
+  need('NOTICE');
   if (!existsSync(at('LICENSE'))) problems.push(`${PLUGIN_DIR}/LICENSE is missing`);
   else if (
     existsSync(join(root, 'LICENSE')) &&

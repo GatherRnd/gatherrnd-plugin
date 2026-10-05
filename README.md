@@ -30,4 +30,9 @@ Help: [support.gatherrnd.app](https://support.gatherrnd.app) or [info@gatherrnd.
 
 ## Licence
 
-The plugin is [MIT licensed](LICENSE). The licence does not cover the Gather Rnd name or logo.
+The files in this repository are under the [MIT licence](LICENSE), with two exceptions:
+
+- The Gather Rnd name and the logos in `plugins/gatherrnd/assets/` are not under it. They may be shown unchanged in an installed, shared or forked copy of the plugin, and in the listing of a directory Gather Rnd submits it to; [NOTICE](plugins/gatherrnd/NOTICE) says what else is allowed.
+- The two schemas in `schemas/agent-plugins-1.0.0/` (`plugin.schema.json` and `mcp.schema.json`) belong to the Agent Plugins project and are under the [Apache License 2.0](schemas/agent-plugins-1.0.0/LICENSE).
+
+The plugin's connection files (`.mcp.json` and `mcp.json`, which hold only the connector's address) are under the MIT licence like the rest. The licence covers these files only. The Gather Rnd app, its API, the connector at `https://mcp.gatherrnd.app/mcp` and the service behind them are not open source and are not in this repository. This licence gives no right to use them; using the connector needs a Gather Rnd account.

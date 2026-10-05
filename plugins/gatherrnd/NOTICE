@@ -1,0 +1,49 @@
+Gather Rnd plugin: what the licence covers
+
+Gather Rnd is run by Matthew Weghorst.
+
+The files in this plugin, apart from the two logo images in assets/
+(logo.png and composer-icon.png), are under the MIT licence in LICENSE.
+Under it, anyone may use, copy, change, host and share them, as long as the
+copyright and licence notice in LICENSE stays with them. That includes the
+companies that run plugin directories, such as Anthropic and OpenAI, and
+their customers who install the plugin. The plugin's connection files,
+.mcp.json and mcp.json, are among those files: they hold only the
+connector's address.
+
+The licence covers those files only. It does not cover:
+
+- the Gather Rnd app, its API, the connector at https://mcp.gatherrnd.app/mcp
+  or the service behind them. They are not open source and their code is not
+  here. Gather Rnd keeps all its rights in them.
+- what members keep in Gather Rnd, or what the connector returns.
+- the Gather Rnd name, or the two logo images in assets/. Gather Rnd keeps
+  all its rights in them.
+
+The plugin gives no access to anything by itself, and this licence gives no
+right to use the connector or the service. Using the connector needs a
+Gather Rnd account. Gather Rnd's privacy policy
+(https://gatherrnd.app/privacy) says how it handles what it receives.
+
+Nothing in this notice limits what the MIT licence allows for the files it
+covers. The rules below are about the Gather Rnd name and the two logo
+images only.
+
+You may copy and show the logos unchanged as part of this plugin, as long as
+this NOTICE stays with them: when you install it, share or fork a copy, or
+host it for your own or your organisation's people, including a copy you
+have changed for that use. A directory that Gather Rnd submits the plugin to
+may show the name and logos in its listing and serve the plugin through its
+usual channels.
+
+Only Gather Rnd submits this plugin to a public plugin directory, such as
+Anthropic's or OpenAI's, under the Gather Rnd name, publisher or logos. If
+you submit or list a copy in a public plugin directory, give it a name,
+display name, publisher and icons of its own, and don't present it as
+Gather Rnd's. You may still say truthfully that it is based on, or works
+with, Gather Rnd.
+
+A directory that Gather Rnd submits this plugin to also has the rights its
+own terms give it. This notice does not narrow them.
+
+Questions: info@gatherrnd.app
