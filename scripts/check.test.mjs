@@ -21,6 +21,7 @@ function copy() {
   const root = mkdtempSync(join(tmpdir(), 'plugin-check-'));
   cpSync(join(REPO, PLUGIN_DIR), join(root, PLUGIN_DIR), { recursive: true });
   cpSync(join(REPO, 'contract'), join(root, 'contract'), { recursive: true });
+  cpSync(join(REPO, 'LICENSE'), join(root, 'LICENSE'));
   return root;
 }
 
@@ -98,12 +99,18 @@ test('3. a change to the plugin ships under a higher version', () => {
     git('checkout', '-q', '-b', 'change');
     edit(root, 'README.md', (text) => `${text}\nOne more line.\n`);
     git('-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-qam', 'change');
-    assert.match(
-      checkPlugin(root, { base: 'main' }).join('\n'),
-      /its version must rise above 0\.2\.0/,
+    const { version } = JSON.parse(readFileSync(join(root, PLUGIN_DIR, 'plugin.json'), 'utf8'));
+    const [major, minor, patch] = version.split('.').map(Number);
+    assert.ok(
+      checkPlugin(root, { base: 'main' })
+        .join('\n')
+        .includes(`its version must rise above ${version}`),
     );
     for (const path of ['plugin.json', '.claude-plugin/plugin.json']) {
-      editJson(root, path, (manifest) => ({ ...manifest, version: '0.2.1' }));
+      editJson(root, path, (manifest) => ({
+        ...manifest,
+        version: `${major}.${minor}.${patch + 1}`,
+      }));
     }
     git('-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-qam', 'bump');
     assert.deepEqual(checkPlugin(root, { base: 'main' }), []);
@@ -411,10 +418,33 @@ test('9. an icon path that leaves the plugin is refused before it is read', () =
   );
 });
 
-test('10. --submission names what a directory submission still needs', () => {
+test('10. a licence in both manifests, the same LICENSE in the plugin as in the repository, and a NOTICE', () => {
+  assert.match(
+    broken((root) => rmSync(join(root, PLUGIN_DIR, 'LICENSE'))),
+    /plugins\/gatherrnd\/LICENSE is missing/,
+  );
+  assert.match(
+    broken((root) => rmSync(join(root, PLUGIN_DIR, 'NOTICE'))),
+    /plugins\/gatherrnd\/NOTICE is missing/,
+  );
+  assert.match(
+    broken((root) => {
+      for (const path of ['plugin.json', '.claude-plugin/plugin.json']) {
+        editJson(root, path, ({ license: _license, ...manifest }) => manifest);
+      }
+    }),
+    /license: set it in both manifests/,
+  );
+  assert.match(
+    broken((root) => writeFileSync(join(root, 'LICENSE'), 'Some other licence\n')),
+    /LICENSE and plugins\/gatherrnd\/LICENSE must be the same text/,
+  );
+});
+
+test('11. --submission names what an OpenAI submission still needs', () => {
   const problems = checkPlugin(REPO, { submission: true }).join('\n');
+  assert.ok(!problems.includes('licen'), 'the licence is a day-to-day rule now');
   for (const need of [
-    'a licence',
     'interface.longDescription',
     'interface.developerName',
     'interface.termsOfServiceURL',
