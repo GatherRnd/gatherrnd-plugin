@@ -2,7 +2,7 @@
 
 The [Gather Rnd](https://gatherrnd.app) plugin: it connects an AI assistant to your circle in Gather Rnd, so it can help you plan the week and make asks, through your own Gather Rnd account and with your yes before anything changes.
 
-Gather Rnd is an iPhone app for a small circle of people, such as a family, roommates or a carpool, who plan their week together. It is invite only for now: you need an account from the app, in a circle you joined by invitation or started yourself. AI assistants start on in every circle, and a circle's accountable members can turn them off.
+Gather Rnd is an iPhone app for a small circle of people, such as a family, roommates or a carpool, who plan their week together. It is invite only for now: you need an account from the app, in a circle you joined by invitation or started yourself. AI assistants are off in each circle until the circle turns them on in Circle settings, and it can turn them off again.
 
 ## Add it
 

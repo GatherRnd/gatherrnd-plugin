@@ -22,7 +22,7 @@ You need a Gather Rnd account that belongs to at least one circle. Gather Rnd is
 2. A Gather Rnd page opens. Sign in the way you do in the app, read what Claude will get, and choose **Allow**.
 3. To stop it at any time, in the Gather Rnd app tap your face at the top right, then **Settings**, and under **AI assistants** choose **Disconnect**. That stops access at once.
 
-AI assistants start on in every circle, and a circle's accountable members can turn them off. In a circle where they're off, Claude can't read or change anything. Claude can turn them off when an accountable member asks, but it can't turn them back on.
+AI assistants are off in each circle until the circle turns them on in the Gather Rnd app (Circle settings, then AI assistants), and it can turn them off again. In a circle where they're off, Claude can't read or change anything, and it can't turn them on.
 
 ## What it sends, and privacy
 
